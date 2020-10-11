@@ -193,5 +193,26 @@ class TargetCircleLineView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : TargetCircleLineView) {
+
+        private val animator : Animator = Animator(view)
+        private val tcl : TargetCircleLine = TargetCircleLine(0)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            animator.animate {
+                tcl.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            tcl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
 
