@@ -216,5 +216,14 @@ class TargetCircleLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : TargetCircleLineView {
+            val view : TargetCircleLineView = TargetCircleLineView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
 
