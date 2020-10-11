@@ -32,4 +32,38 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i / n)
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+fun Int.mirror() : Float = 1f - 2 * this
+
+fun Canvas.drawTargetCircleLine(scale : Float, w : Float, h : Float, paint : Paint) {
+    val sf : Float = scale.sinify()
+    val sf1 : Float = sf.divideScale(0, parts)
+    val sf2 : Float = sf.divideScale(1, parts)
+    val size : Float = Math.min(w, h) / sizeFactor
+    val r : Float = size / 2
+    val endY : Float = -h / 2 + (h / 2 - r) * sf1
+    val endX : Float = -w / 2 + (w / 2 - r) * sf1
+    save()
+    translate(w / 2, h / 2)
+    for (j in 0..3) {
+        val iy : Int = j % 2
+        val jx : Float = (j / 2).mirror()
+        save()
+        scale(1f, jx)
+        rotate(90f * (j % 2))
+        drawLine(0f, -h / 2 + (-w / 2 + h / 2) * iy,  0f, endY + (endX - endY) * iy, paint)
+        restore()
+    }
+    drawArc(RectF(-r, -r, r, r), 0f, deg * sf2, true, paint)
+    restore()
+}
+
+fun Canvas.drawTCLNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawTargetCircleLine(scale, w, h, paint)
+}
+
 
