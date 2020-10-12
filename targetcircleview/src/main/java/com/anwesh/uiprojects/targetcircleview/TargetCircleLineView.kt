@@ -29,7 +29,7 @@ val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
 
 fun Int.inverse() : Float = 1f / this
-fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i / n)
+fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 fun Int.mirror() : Float = 1f - 2 * this
@@ -200,9 +200,11 @@ class TargetCircleLineView(ctx : Context) : View(ctx) {
 
         private val animator : Animator = Animator(view)
         private val tcl : TargetCircleLine = TargetCircleLine(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
         fun render(canvas : Canvas) {
             canvas.drawColor(backColor)
+            tcl.draw(canvas, paint)
             animator.animate {
                 tcl.update {
                     animator.stop()
